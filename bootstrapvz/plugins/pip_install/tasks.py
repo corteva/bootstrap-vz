@@ -8,7 +8,7 @@ class AddPipPackage(Task):
 
     @classmethod
     def run(cls, info):
-        for package_name in ('python-pip', 'build-essential', 'python-dev'):
+        for package_name in ('build-essential', 'python-dev', 'wget'):
             info.packages.add(package_name)
 
 
@@ -22,4 +22,6 @@ class PipInstallCommand(Task):
         packages = info.manifest.plugins['pip_install']['packages']
         pip_install_command = ['chroot', info.root, 'pip', 'install']
         pip_install_command.extend(packages)
+        log_check_call(['chroot', info.root, 'wget', 'https://bootstrap.pypa.io/get-pip.py'])
+        log_check_call(['chroot', info.root, 'python', 'get-pip.py'])
         log_check_call(pip_install_command)
